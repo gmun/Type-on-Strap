@@ -21,32 +21,42 @@ priority: 1.0
 
 # 들어가기전
 
-이전 [Spring Data JPA의 이력 유형 데이터 관리](https://gmoon92.github.io/spring/hibernate/audited/2020/04/10/spring-data-audit.html) 포스팅에서 엔티티의 이력 유형 데이터 모델링 하는 방법을 소개해드렸습니다.
+이전 [Spring Data JPA의 이력 유형 데이터 관리](https://gmoon92.github.io/spring/hibernate/audited/2020/04/10/spring-data-audit.html) 포스팅에서 Spring Data 애노테이션을 활용하여 엔티티의 이력 유형 데이터 모델링하는 방법에 대해 작성했습니다.
 
-이때 삭제에 대한 데이터를 추적할 수 없다는 단점이 존재했습니다. 본 포스팅에선 삭제 데이터는 물론이거니와 
+글을 보다보면 Spring Data 애노테이션으로 이력 유형 데이터를 관리할 수 있지만, 이전의 데이터 또는 삭제한 데이터를 추적할 수 없다는 단점이 있습니다.
+
+- 이전 이력 데이터 관리
+- 삭제 데이터 관리
+
+다음 문제점들을 해결하기 위해선 이력 데이터를 추적할 테이블을 관리한다면 해결할 수 있지만, 기존의 테이블 외에 별도의 테이블을 생성하여 관리한다는 건 쉽지 않습니다. Hibernate에선 이러한 상황들을 고려하여 Hibernate Envers 패키지를 제공해주고 있습니다. 이를 사용한다면 더욱 쉽게 이력 데이터를 관리할 수 있습니다. 본 포스팅에선 Hibernate Envers를 활용하여 이력 데이터를 관리하는 방법에 대해 소개해드리겠습니다.
 
 >- [Hibernate Envers를 활용한 이력관리](https://gmoon92.github.io/spring/hibernate/envers/2020/01/02/hibernate-envers-concepts.html) 
 >- [Spring Data JPA의 이력 유형 데이터 관리](https://gmoon92.github.io/spring/hibernate/audited/2020/04/10/spring-data-audit.html)
 
 
-# 앞으로 진행될 내용
+# 학습 목표
 
-지금까지 Hibernate Envers에 대한 대략적인 개념과 동작 방식과 관련된 이론적인 설명 중심으로 작성했습니다.
+- Hibernate Envers 사용법과 이해
+- Audited Entity
 
-물론, 이론적인 설명이라 하기엔 생략된 부분들이 많습니다. 예를 들어 이력 테이블에 존재하는 REVTYPE 컬럼은 무엇을 의미하는지, Audited Table은 어떻게 생성하고 관리되는지, Revision Number는 어느 시점에 생성되는지 등등 자세한 설명은 생략되었습니다. 앞으로 작성될 포스트를 통해 제기된 궁금증들을 풀어갈 예정이며, Hibernate Envers를 실무에 적용했던 사례를 통해 이론보다는 사용법과 주의사항에 대해 자세히 설명하겠습니다.
+## 1. Hibernate Envers
+## Audited Entity
+
+Hibernate Envers는 
+
+## 2. Envers Config Properties
+
+## 3. Revision Table 구성
+
+## 4. Revision Table 조회
+
 
 - Audited Entity
 - Custom Revision Entity
 - EntityTrackingRevisionListener
 - EventListenerRegistry
 
-
-### 이력 테이블
-
-### Envers 환경 구성
-
 ### 마무리
-
 
 ### 참고
 
