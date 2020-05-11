@@ -19,7 +19,7 @@ priority: 1.0
 
 ---
 
-## 들어가기전
+# 들어가기전
 
 다른 ORM 프레임워크와 마찬가지로, 하이버네이트는 1차 캐시 개념이 있다.
 
@@ -32,7 +32,7 @@ priority: 1.0
 - Hibernate 2차 캐시의 이해
 - Hibernate 2차 캐시의 사용법
 
-### 동작 방식
+### 1. 동작 방식
 
 하이버네이트에선 공유 캐시(Shared Cache) 또는 2차 캐시(Second-Level Cache, L2 Cache)라는 애플리케이션 범위의 캐시를 지원한다. 2차 캐시 범위는 SessionFactory-scoped이며, 2차 캐시에 저장된 데이터를 동일한 세션 팩토리의 모든 세션과 공유하게 된다. 만약 2차 캐시가 활성화 된 경우, 엔터티를 조회할 때 다음과 같은 동작 방식으로 진행한다.
 
@@ -42,7 +42,7 @@ priority: 1.0
 
 > 2차 캐시가 캐시한 데이터를 직접반환하지 않고 복사하는 이유는 동시성을 극대화하기 위함이다. 만약 직접 캐시한 데이터를 여러군데에서 수정할 경우 락을 걸어야 하는데 이러한 경우 동시성이 떨어질 수 있다.
 
-### 특징
+### 2. 특징
 
 2차 캐시는 애플리케이션 범위 캐시로써 애플리케이션이 종료될 때까지 캐시를 유지하는 특징을 지니고 있다. 그 외 2차 캐시의 특징은 다음과 같다.
 
@@ -51,7 +51,7 @@ priority: 1.0
 - 영속성 컨텍스트가 다르면 객체 동일성(a == b)를 보장하지 않는다.
 - JPA 2.0부터 2차 캐시 표준을 정의했다.
 
-### 2차 캐시 구현
+### 3. 구현
 
 2차 캐시를 사용하려면 javax.persistence.Cacheable 애노테이션을 사용하면 된다.
 
@@ -103,7 +103,7 @@ public enum SharedCacheMode {
 }
 ```
 
-### 캐시 조회 모드와 보관 모드
+### 3.1. 캐시 조회 모드와 보관 모드
 
 캐시를 무시하고 직접 데이터베이스에서 조회 또는 캐시를 갱신하려면 캐시 조회 모드와 캐시 보관 모드를 사용하면 된다.
 
@@ -152,7 +152,7 @@ public enum CacheStoreMode {
 - BYPASS : 캐시에 저장하지 않는다.
 - REFRESH : USE 전략에 추가로 데이터베이스에서 조회한 엔티티를 최신 상태로 다시 캐시한다.
 
-### 설정 범위
+### 3.2. 설정 범위
 
 캐시 모드는 엔티티 매니저 단위로 설정하거나, EntityManager.find(), EntityManager.reflesh()에 설정할 수 있다. 
 
@@ -180,7 +180,7 @@ em.createQuery("select m from Member m where m.id = :id", Member.class)
 	.getSingleResult();
 ```
 
-### JPA Cache API
+### 3.3. JPA Cache API
 
 JPA에선 캐시를 관리하기 위해 Cache 인터페이스를 제공하고 있다. Cache는 EntityManagerFactory에서 구할 수 있다.
 
@@ -212,15 +212,34 @@ public interface Cache {
 		//JPA Cache 구현체 조회
     public <T> T unwrap(Class<T> cls);
 ```
+JPA의 표준 기능은 다음과 같다. 실제 캐시를 적용하려면 구현체의 레퍼런스를 참고해야한다.
 
+> [Hibernate DOC - Cache](https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#caching)
 
-### & EHCAHE
+### 3.4. EHCAHE 적용
+
+이제 Hibernate와 EHCACHE(ehcache.org)를 사용해서 2차 캐시를 적용해보자.
+
+- 엔티티 캐시 : 엔티티 단위로 캐시한다. 식별자로 엔티티를 조회하거나 컬렉션이 아닌 연관된 엔티티를 로딩할 때 사용한다.
+- 컬렉션 캐시 : 엔티티와 연관된 컬렉션을 캐시한다. 컬렉션이 엔티티를 담고 있으면 식별자 값만 캐시한다.
+- 쿼리 캐시 : 쿼리와 파라미터 정보를 키로 사용해서 캐시한다. 결과가 엔티티면 식별자 값만 캐시한다.
+
+JPA 표준에는 엔티티 캐시만 정의되어 있다.
+
+우선 hibernate-ehcache 라이버리 pom.xml 추가하자.
+
+``` xml
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-ehcache</artifactId>
+</dependency>
+``` 
+ 
+
 
 ### 마무리
 
 ### 참고
 
-- [jboss-docs-hibernate-4.1-Envers](https://docs.jboss.org/hibernate/core/4.1/devguide/en-US/html/ch15.html#envers-tracking-modified-entities-queries)
-- [Spring DOC - Spring data](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/annotation/package-frame.html)
-- [Baeldung - Spring data annotations](https://www.baeldung.com/spring-data-annotations)
-- [Hibernate-core - listeners](https://docs.jboss.org/hibernate/core/4.0/hem/en-US/html/listeners.html)
+- [Baeldung - Hibernate Second-Level Cache](https://www.baeldung.com/hibernate-second-level-cache)
+- [How Hibernate Second Level Cache Works?](https://howtodoinjava.com/hibernate/how-hibernate-second-level-cache-works)
