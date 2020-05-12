@@ -234,7 +234,8 @@ JPA 표준에는 엔티티 캐시만 정의되어 있다.
     <artifactId>hibernate-ehcache</artifactId>
 </dependency>
 ``` 
- 
+
+
 
 
 ### 마무리
