@@ -51,7 +51,7 @@ priority: 1.0
 - 영속성 컨텍스트가 다르면 객체 동일성(a == b)를 보장하지 않는다.
 - JPA 2.0부터 2차 캐시 표준을 정의했다.
 
-### 3. 구현
+### 3. JPA 2차 캐시
 
 2차 캐시를 사용하려면 javax.persistence.Cacheable 애노테이션을 사용하면 된다.
 
@@ -216,7 +216,7 @@ JPA의 표준 기능은 다음과 같다. 실제 캐시를 적용하려면 구�
 
 > [Hibernate DOC - Cache](https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#caching)
 
-### 3.4. EHCAHE 적용
+### 4. EHCACHE 적용
 
 이제 Hibernate와 EHCACHE(ehcache.org)를 사용해서 2차 캐시를 적용해보자.
 
@@ -226,15 +226,18 @@ JPA의 표준 기능은 다음과 같다. 실제 캐시를 적용하려면 구�
 
 JPA 표준에는 엔티티 캐시만 정의되어 있다.
 
-우선 hibernate-ehcache 라이버리 pom.xml 추가하자.
+### 4.1. RegionFactory
+
+Hibernate의 2차 캐시를 사용하기 위해선 org.hibernate.cache.spi.RegionFactory 인터페이스를 구현한 클래스를 사용해야 한다. 기본적으로 hibernate-core엔 RegionFactory 인터페이스가 존재하고 이를 구현한 클래스는 존재하지 않기 때문이다. EHCACHE를 적용하기 위해선 다음과 같이 pom.xml에 hibernate-ehcache 라이브러리를 추가하자.
 
 ``` xml
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-ehcache</artifactId>
 </dependency>
-``` 
+```
 
+> 참고로 hibernate-ehcache 라이브러리 버전은 해당 프로젝트의 hibernate-core 라이브러리 버전과 동일한 버전이어야 한다.
 
 
 
