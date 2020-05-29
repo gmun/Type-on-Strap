@@ -160,15 +160,44 @@ Number revisionNumber = (Number) getAuditReader().createQuery()
 
 ## 4. 이력 데이터 저장
 
-Hibernate Envers는 트랜잭션이 커밋하면 다음과 같은 동작 방식으로 데이터를 저장하게 됩니다.    
+Hibernate Envers는 트랜잭션이 커밋을 하게 되면, 다음과 같은 동작 방식으로 데이터를 저장하게 됩니다.    
 
 1. Entity 테이블 저장
-2. RevisionListener
-3. REV 테이블 저장
-4. AUD 테이블 저장
+2. REV 테이블 저장
+3. AUD 테이블 저장
 
+Envers의 저장하는 방식은 트랜잭션 단위로 개정 테이블에 저장하는 특징이 있습니다.
+
+예를 들어 동일한 트랜잭션 범위에서 Member 테이블과 Team 테이블을 동시에 수정하게 된다면, 하나의 개정 번호로 데이터를 저장하게 됩니다. 
+
+## 5. Revision Table 커스텀
+
+이제 Revision Table를 소스 베이스에서 변경하는 방식에 대해 소개해드리겠습니다.
+
+기본적으로 Envers를 설정하게 되면 Hibernate에 의해 REVINFO 라는 개정 테이블이 생성됩니다.
+
+|Column|설명|
+|---|---|
+|REV|개정 테이블의 기본 키로써 int/Integer 또는 long/Long 타입만 설정 가능|
+|REVTSTMP|long/Long 또는 java.util.Date 타입으로만 설정 가능|
+
+> 왜 개정 생성 일자 타입엔 Time API(JDK8)를 사용할 수 없을까? 다음과 같은 의문이 있다면 아래 링크를 참고하자.
+> - https://hibernate.atlassian.net/browse/HHH-10827
+> - https://hibernate.atlassian.net/browse/HHH-10828
+> - https://hibernate.atlassian.net/browse/HHH-10496
+
+
+``` java
+@Entity
+@RevisionEntity
+public class RevisionHitory extends DefaultRevisionEntity {
+
+}
+```
 개정 테이블을 커스텀하기 위해 이벤트 리스너를 등록하면 
- 
+
+
+
 
 /**
  * life cycle
