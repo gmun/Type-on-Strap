@@ -186,14 +186,29 @@ Envers의 저장하는 방식은 트랜잭션 단위로 개정 테이블에 저�
 > - https://hibernate.atlassian.net/browse/HHH-10828
 > - https://hibernate.atlassian.net/browse/HHH-10496
 
+이러한 개정 테이블에 부가적인 데이터를 쌓기 위해선 org.hibernate.envers.RevisionEntity 애노테이션을 사용하면 됩니다. 
 
 ``` java
 @Entity
+@Table(name = "REVISION_HISTORY")
 @RevisionEntity
-public class RevisionHitory extends DefaultRevisionEntity {
+public class RevisionHistory extends DefaultRevisionEntity {
 
+    @Column(name = "username")
+    private String username;
 }
 ```
+
+예를 들어 어느 회원이 엔티티를 변경했는지 알고 싶다면 다음 코드와 같이 @Column 애노테이션을 사용하여 지정만 해주시면 됩니다.
+
+![img](/md/img/hibernate/envers/revision_entity_custom.png)
+
+다음으로 누가 엔티티를 수
+
+이벤트 리스너를 등록하여 개정 엔티티 
+
+
+
 개정 테이블을 커스텀하기 위해 이벤트 리스너를 등록하면 
 
 
